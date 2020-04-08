@@ -12,3 +12,45 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+// setup (initialize)
+(LISTEN)
+@SCREEN
+D=A
+@pointer
+M=D
+
+@KBD
+D=M
+
+@WHITE
+D;JEQ
+
+(BLACK)
+@R0
+M=-1
+@DRAWLOOP
+D;JMP
+
+(WHITE)
+@R0
+M=0
+
+(DRAWLOOP)
+@pointer
+D=M
+@KBD  // SCREEN: [0x4000, 0x6000), KBD: 0x6000
+D=D-A  // if pointer >= @KBD then go back to listen to keyboard input
+@LISTEN
+D;JGE
+
+(LOOP)
+@R0 // load color
+D=M
+@pointer
+A=M // indirect
+M=D // draw
+@pointer
+M=M+1 // move forward the pointer
+@DRAWLOOP
+0;JMP
